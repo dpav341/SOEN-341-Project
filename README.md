@@ -25,7 +25,7 @@ The objective is for users without access to a motor vehicle to carpool to a ski
 ## Team
   - Davide Pavone (29597360) [dpav341](https://github.com/dpav341)
   - Nicolas Gharzouzi (40232064) [Nicolasgharzouzi](https://github.com/Nicolasgharzouzi)
-  - Bethany Abebe (40282242)
+  - Bethany Abebe (40282242) [BethanyABE](https://github.com/BethanyABE)
   - Hawad Ahmad (40276935) [rol3293](https://github.com/rol3293)
   - Jeremy Oroc (40276001) [JeremyOroc](https://github.com/JeremyOroc)
   - Baila Ly (40279603) [Baila3](https://github.com/Baila3)
