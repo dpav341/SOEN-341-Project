@@ -1,23 +1,23 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import { Route, Navigate, Routes } from 'react-router-dom';
+import { CookiesProvider, useCookies } from "react-cookie";
+import Login from './pages/Login/Login';
+import SignUp from './pages/SignUp/SignUp';
 
 function App() {
+  const [cookies] = useCookies();
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <CookiesProvider>
+        <Routes>
+          {/* <Route path="/user-dashboard" element={<UserDashboard />}/>  */}
+          <Route exact path="/" element={cookies.idCookie ? <SignUp /> : <Navigate to="/login" replace />
+          } />
+          <Route path="/login" element={<Login />} />
+          <Route path="/sign-up" element={<SignUp />} />
+        </Routes>
+      </CookiesProvider>
     </div>
   );
 }
