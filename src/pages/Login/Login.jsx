@@ -29,7 +29,7 @@ export default function Login() {
           }
         ]
         handleCookies(cookies, setCookie);
-        navigate('/');
+        navigate('/Select');
       }
 
     } catch (ex) {
