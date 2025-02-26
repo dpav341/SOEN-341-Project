@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { useCookies } from 'react-cookie';
 import { handleCookies } from '../../utils/helpers';
 import './Login.css';
+import { auth, provider } from '../../firebase';
+import { signInWithPopup } from 'firebase/auth';
 
 
 export default function Login() {
@@ -39,8 +41,14 @@ export default function Login() {
   }
 
 
-  return (
+  const signIn = () => {
+    signInWithPopup(auth, provider)
+      .then(result => console.log(result))
+      .catch(error => alert(error.message))
+  }
 
+
+  return (
     <div className="login-wrapper">
       <div className='boxL'>
         <h1>Sign In</h1>
@@ -56,6 +64,7 @@ export default function Login() {
         <div>
           <button className="user_btn" type="submit" onClick={onLogin}>Login</button>
         </div>
+        <button className="user_btn" type="button" onClick={signIn}>Sign In with Google</button>
       </div>
     </div>
   );
