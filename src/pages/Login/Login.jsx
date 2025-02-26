@@ -64,7 +64,7 @@ export default function Login() {
         <div>
           <button className="user_btn" type="submit" onClick={onLogin}>Login</button>
         </div>
-        <button onClick={signIn}>Sign In with Google</button>
+        <button className="user_btn" type="button" onClick={signIn}>Sign In with Google</button>
       </div>
     </div>
   );
