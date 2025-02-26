@@ -6,6 +6,7 @@ import { handleCookies } from '../../utils/helpers';
 import './Login.css';
 import { auth, provider } from '../../firebase';
 import { signInWithPopup } from 'firebase/auth';
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 
 export default function Login() {
@@ -17,22 +18,32 @@ export default function Login() {
 
   async function onLogin() {
     try {
-      const { data } = await axios.post(`'https://jsonplaceholder.typicode.com/posts'`, { email, password });
+      // const { data } = await axios.post(`'https://jsonplaceholder.typicode.com/posts'`, { email, password });
 
-      if (data) {
-        const cookies = [
-          {
-            name: "idCookie",
-            value: data.id,
-          },
-          {
-            name: "emailCookie",
-            value: data.email,
-          }
-        ]
-        handleCookies(cookies, setCookie);
-        navigate('/');
-      }
+      // if (data) {
+
+        //sign in with email/password using firebase authentication
+        const auth = getAuth();
+        signInWithEmailAndPassword(auth, email, password)
+        .then(result => alert("Login successful!"))
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+        });
+
+        // const cookies = [
+        //   {
+        //     name: "idCookie",
+        //     value: data.id,
+        //   },
+        //   {
+        //     name: "emailCookie",
+        //     value: data.email,
+        //   }
+        // ]
+        // handleCookies(cookies, setCookie);
+        // navigate('/');
+      // }
 
     } catch (ex) {
       console.log(ex);

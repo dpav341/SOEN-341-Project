@@ -16,26 +16,26 @@ export default function SignUp() {
 
   async function onSignUp() {
     try {
-      const { data } = await axios.post(
-        "https://jsonplaceholder.typicode.com/posts",
-        {
-          name,
-          email,
-          password,
-        }
-      );
+      // const { data } = await axios.post(
+      //   "https://jsonplaceholder.typicode.com/posts",
+      //   {
+      //     name,
+      //     email,
+      //     password,
+      //   }
+      // );
 
       // create user in firebase authentication
       const auth = getAuth();
       createUserWithEmailAndPassword(auth, email, password);
 
-      if (data) {
-        setCookie("idCookie", data.name, { path: "/" });
-        setCookie("emailCookie", data.email, { path: "/" });
-        setCookie("nameCookie", data.name, { path: "/" });
+      // if (data) {
+      //   setCookie("idCookie", data.name, { path: "/" });
+      //   setCookie("emailCookie", data.email, { path: "/" });
+      //   setCookie("nameCookie", data.name, { path: "/" });
 
-        navigate("/");
-      }
+        navigate("/login");
+      // }
     } catch (ex) {
       setError(ex.response.data.error || "Whoops! Something went wrong ");
     }
