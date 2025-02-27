@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import { handleCookies } from "../../utils/helpers";
@@ -16,34 +15,37 @@ export default function SignUp() {
 
   async function onSignUp() {
     try {
-      // const { data } = await axios.post(
-      //   "https://jsonplaceholder.typicode.com/posts",
-      //   {
-      //     name,
-      //     email,
-      //     password,
-      //   }
-      // );
 
       // create user in firebase authentication
       const auth = getAuth();
-      createUserWithEmailAndPassword(auth, email, password);
+      const user = await createUserWithEmailAndPassword(auth, email, password);
+      console.log(user);
 
-      // if (data) {
-      //   setCookie("idCookie", data.name, { path: "/" });
-      //   setCookie("emailCookie", data.email, { path: "/" });
-      //   setCookie("nameCookie", data.name, { path: "/" });
-
-        navigate("/login");
-      // }
+      navigate("/login");
     } catch (ex) {
-      setError(ex.response.data.error || "Whoops! Something went wrong ");
+      console.log(ex);
+      switch (ex.code) {
+        case 'auth/email-already-in-use':
+          setError("The email address is already in use by another account.");
+          break;
+        case 'auth/invalid-email':
+          setError("The email address is not valid.");
+          break;
+        case 'auth/operation-not-allowed':
+          setError("Email/password accounts are not enabled.");
+          break;
+        case 'auth/weak-password':
+          setError("The password is too weak.");
+          break;
+        default:
+          setError("Whoops! Something went wrong.");
+          break;
+      }
     }
   }
 
   return (
     <div className="signup_wrapper">
-      {error && <h1>{error}</h1>}
       <div className="boxS">
         <h1>Sign Up</h1>
         <label>
@@ -78,6 +80,7 @@ export default function SignUp() {
             Register
           </button>
         </div>
+        {error && <div>{error}</div>}
       </div>
     </div>
   );
