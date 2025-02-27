@@ -1,231 +1,51 @@
-import express from 'express'
-import { Server } from "socket.io"
-import path from 'path'
-import { fileURLToPath } from 'url'
+import express from 'express';
+import http from 'http';
+import { Server } from 'socket.io';
+import { Connection } from './db.js';
+import mongoose from 'mongoose';
+import Conversation from './Chat.js';
 
-import { Connection } from './db.js'
-import { getRoomCollection} from './db.js'
-import  mongoose from 'mongoose'
-import { Chat } from './Chat.js'
-import timeStamp from 'console'
+const app = express();
+app.use(express.json());
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
+Connection();
 
-const PORT = process.env.PORT || 3500
-const ADMIN = "Admin"
-
-const app = express()
-
-app.use(express.static(path.join(__dirname, "public")))
-
-Connection()
-
-const expressServer = app.listen(PORT, () => {
-    console.log(`listening on port ${PORT}`)
-})
-
-// state 
-const UsersState = {
-    users: [],
-    setUsers: function (newUsersArray) {
-        this.users = newUsersArray
-    }
-}
-
-const io = new Server(expressServer, {
+const server = http.createServer(app);
+const io = new Server(server, {
     cors: {
-        origin: process.env.NODE_ENV === "production" ? false : ["http://localhost:5500", "http://127.0.0.1:5500"]
+        origin: "*"
     }
-})
+});
 
-io.on('connection', socket => {
-    console.log(`User ${socket.id} connected`)
-    /*
-    const loadMessages = async (room) => {
+io.on('connection', (socket) => {
+    console.log('Connected');
+
+    const loadMessageList = async () => {
         try {
-            const messages = await Chat.find({ room_id: /rap/ }).sort({timeStamp : 1}).exec();
-            console.log('trying')
-            socket.emit('chat', messages)
-        } catch(err) {
-            console.log(err)
+            const messageList = await Conversation.find().sort({ timeStamp: 1 }).exec();
+            socket.emit('messageList', messageList);
+        } catch (err) {
+            console.error(err);
         }
-    }
-    loadMessages();
+    };
     
+    loadMessageList();
 
-    async function getMessages() {
-        try{
-            const collection = getRoomCollection('Rap');
-            const messages = await collection.toArray();
-            socket.emit('chat', messages)
+    socket.on('newMessage', async (msg) => {
+        try {
+            const newMessage = new Conversation(msg);
+            await newMessage.save();
+            io.emit('message', newMessage);
+        } catch (err) {
+            console.error(err);
         }
-        catch(err){
-            console.log(err)
-        }
-    }
-    
-    getMessages()
-    */
-
-
-    // Upon connection - only to user 
-    socket.emit('message', buildMsg(ADMIN, "Welcome to Chat App!"))
-
-    socket.on('enterRoom', ({ name, room }) => {
-
-        // leave previous room 
-        const prevRoom = getUser(socket.id)?.room
-
-       
-
-        if (prevRoom) {
-            socket.leave(prevRoom)
-            io.to(prevRoom).emit('message', buildMsg(ADMIN, `${name} has left the room`))
-        }
-
-        const user = activateUser(socket.id, name, room)
-        
-        
-        
-       
-        // Cannot update previous room users list until after the state update in activate user 
-        if (prevRoom) {
-            io.to(prevRoom).emit('userList', {
-                users: getUsersInRoom(prevRoom)
-            })
-        }
-
-        /*socket.on('newMessage', async (msg) => {
-            try {
-                const newMessage = new Chat(msg)
-                await newMessage.save()
-                io.emit('message', msg)
-            }
-            catch(err) {
-                console.log(err)
-            }
-        })
-        */
-        // join room 
-        socket.join(user.room)
-
-        // To user who joined 
-        socket.emit('message', buildMsg(ADMIN, `You have joined the ${user.room} chat room`))
-
-        // To everyone else 
-        socket.broadcast.to(user.room).emit('message', buildMsg(ADMIN, `${user.name} has joined the room`))
-
-        // Update user list for room 
-        io.to(user.room).emit('userList', {
-            users: getUsersInRoom(user.room)
-        })
-
-        // Update rooms list for everyone 
-        io.emit('roomList', {
-            rooms: getAllActiveRooms()
-        })
-
-        const loadMessages = async (room) => {
-            try {
-                const collection = mongoose.connection.collection(`room_chat_${room}`);
-                const messages = await collection.find({}).toArray();
-                console.log(messages)
-                socket.emit('message', messages)
-            } catch(err) {
-                console.log(err)
-            }
-        }
-        loadMessages();
-
-    })
-
-    // When user disconnects - to all others 
-    socket.on('disconnect', () => {
-        const user = getUser(socket.id)
-        userLeavesApp(socket.id)
-
-        if (user) {
-            io.to(user.room).emit('message', buildMsg(ADMIN, `${user.name} has left the room`))
-
-            io.to(user.room).emit('userList', {
-                users: getUsersInRoom(user.room)
-            })
-
-            io.emit('roomList', {
-                rooms: getAllActiveRooms()
-            })
-        }
-
-        console.log(`User ${socket.id} disconnected`)
-    })
-
-    // Listening for a message event 
-    socket.on('message', ({ name, text }) => {
-        const room = getUser(socket.id)?.room
-        if (room) {
-            io.to(room).emit('message', buildMsg(name, text))
-        }
-        saveMessage(room, name, text)
-    })
-
-    // Listen for activity 
-    socket.on('activity', (name) => {
-        const room = getUser(socket.id)?.room
-        if (room) {
-            socket.broadcast.to(room).emit('activity', name)
-        }
-    })
-
-
-})
-
-function buildMsg(name, text) {
-    return {
-        name,
-        text,
-        time: new Intl.DateTimeFormat('default', {
-            hour: 'numeric',
-            minute: 'numeric',
-            second: 'numeric'
-        }).format(new Date())
-    }
-}
-
-// User functions 
-function activateUser(id, name, room) {
-    const user = { id, name, room }
-    UsersState.setUsers([
-        ...UsersState.users.filter(user => user.id !== id),
-        user
-    ])
-    return user
-}
-
-function userLeavesApp(id) {
-    UsersState.setUsers(
-        UsersState.users.filter(user => user.id !== id)
-    )
-}
-
-function getUser(id) {
-    return UsersState.users.find(user => user.id === id)
-}
-
-function getUsersInRoom(room) {
-    return UsersState.users.filter(user => user.room === room)
-}
-
-function getAllActiveRooms() {
-    return Array.from(new Set(UsersState.users.map(user => user.room)))
-}
-
-async function saveMessage(room, name, message) {
-    const collection = getRoomCollection(room);
-    await collection.insertOne({
-        name,
-        message,
-        timestamp: new Date(),
-        //room_id: room
     });
-}
+
+    socket.on('disconnect', () => {
+        console.log('Disconnected');
+    });
+});
+
+server.listen(8080, () => {
+    console.log('Server running on port 8080');
+});
