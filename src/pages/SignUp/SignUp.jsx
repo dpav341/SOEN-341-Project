@@ -80,7 +80,7 @@ export default function SignUp() {
             Register
           </button>
         </div>
-        {error && <div>{error}</div>}
+        {error && <div className="signup-error">{error}</div>}
       </div>
     </div>
   );
