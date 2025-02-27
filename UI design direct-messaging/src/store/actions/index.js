@@ -11,9 +11,9 @@ export const conversationDeleted = () => ({
     type: 'DELETE_CONVERSATION'
 });
 
-export const newMessageAdded = textMessage => ({
+export const newMessageAdded = (conversationId, messages) => ({
     type: 'NEW_MESSAGE_ADDED',
-    textMessage
+    payload: { conversationId, messages }
 });
 
 export const messagesRequested = (conversationId, numberOfMessages, lastMessageId) => ({
