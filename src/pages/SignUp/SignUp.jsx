@@ -4,6 +4,7 @@ import { useCookies } from "react-cookie";
 import { handleCookies } from "../../utils/helpers";
 import "./SignUp.css";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { Link } from "react-router-dom";
 
 export default function SignUp() {
   const [name, setName] = useState("");
@@ -81,6 +82,9 @@ export default function SignUp() {
           </button>
         </div>
         {error && <div className="signup-error">{error}</div>}
+        <div className="signup-link">
+          <p>Already have an account? <Link to="/login">Login</Link></p>
+        </div>
       </div>
     </div>
   );
