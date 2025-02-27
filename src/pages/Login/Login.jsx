@@ -3,6 +3,7 @@ import "./Login.css";
 import { auth, provider } from "../../firebase";
 import { signInWithPopup } from "firebase/auth";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { Link } from "react-router-dom";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -57,6 +58,10 @@ export default function Login() {
         <button className="user_btn" type="button" onClick={signIn}>
           Sign In with Google
         </button>
+
+        <div className="signup-link">
+          <p>Don't have an account? <Link to="/sign-up">Sign up</Link></p>
+        </div>
       </div>
     </div>
   );
