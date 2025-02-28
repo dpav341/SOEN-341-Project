@@ -6,5 +6,5 @@ const messageSchema = new mongoose.Schema({
     timestamp: {type: Date, default: Date.now},
 })
 
-const Conversation = mongoose.model('${room}', messageSchema)
+const Conversation = mongoose.model('message', messageSchema)
 export { Conversation }
