@@ -16,6 +16,7 @@ export default function Login() {
       signInWithEmailAndPassword(auth, email, password)
         .then((result) => alert("Login successful!"))
         .catch((error) => alert("Invalid credentials."));
+
     } catch (ex) {
       console.log(ex);
     }

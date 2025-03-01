@@ -1,0 +1,94 @@
+.Icon-Wrapper {
+  display: flex;
+  justify-content: center;
+  /* Centers the container horizontally */
+  align-items: center;
+  /* Centers the container vertically */
+  height: 100vh;
+  /* Full viewport height */
+  gap: 100px;
+  /* Adjust spacing between buttons */
+}
+
+.labels {
+  display: flex;
+  flex-direction: column;
+  /* Stack icon and text vertically */
+  align-items: center;
+  /* Center content horizontally */
+  text-align: center;
+}
+
+button {
+  background: none;
+  border: 2px solid black;
+  /* Ensures a visible border */
+  padding: 20px;
+  /* Provides padding for better spacing */
+  border-radius: 10px;
+  /* Rounded edges */
+  cursor: pointer;
+  /* Makes it clear it's clickable */
+  transition: all 0.3s ease-in-out;
+}
+
+button:hover {
+  border-color: #1DB954;
+}
+
+.icons {
+  font-size: 3rem;
+  /* Increases icon size */
+  color: black;
+  transition: color 0.3s;
+}
+
+/* button:hover .icons {
+  color: #1DB954;
+} */
+
+/* Draw effect */
+.draw {
+  transition: color 0.25s;
+}
+
+.draw:hover {
+  color: #1DB954;
+}
+
+
+/* Border Hover Effects */
+/* button::before, */
+button::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-radius: 100px;
+  transition: all 0.3s ease-in-out;
+}
+
+/* button:hover::before, */
+button:hover {
+
+  border: 2px solid #1DB954;
+}
+
+button:hover+p {
+  color: #1DB954;
+}
+
+.icons {
+  font-size: 4rem;
+  /* Increased from 3rem to 4rem */
+  color: black;
+  /* Default color */
+  transition: color 0.3s ease-in-out;
+}
+
+/* Optional: Change icon size on hover */
+button:hover .icons {
+  font-size: 4.5rem;
+  /* Slightly increase on hover for a cool effect */
+  color: #1DB954;
+}
