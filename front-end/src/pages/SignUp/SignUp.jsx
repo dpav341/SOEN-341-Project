@@ -22,7 +22,7 @@ export default function SignUp() {
       const user = await createUserWithEmailAndPassword(auth, email, password);
       console.log(user);
 
-      navigate("/login");
+      navigate("/");
     } catch (ex) {
       console.log(ex);
       switch (ex.code) {

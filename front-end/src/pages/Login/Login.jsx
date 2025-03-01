@@ -4,17 +4,22 @@ import { auth, provider } from "../../firebase";
 import { signInWithPopup } from "firebase/auth";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   async function onLogin() {
     try {
       const auth = getAuth();
       signInWithEmailAndPassword(auth, email, password)
-        .then((result) => alert("Login successful!"))
+        .then((result) =>{ 
+          alert("Login successful!")
+          navigate("/")
+        })
         .catch((error) => alert("Invalid credentials."));
 
     } catch (ex) {
@@ -24,7 +29,10 @@ export default function Login() {
 
   const signIn = () => {
     signInWithPopup(auth, provider)
-      .then((result) => alert("Login successful!"))
+      .then((result) => { 
+        alert("Login successful!")
+        navigate("/")
+       })
       .catch((error) => alert("Invalid login attempt."));
   };
 
