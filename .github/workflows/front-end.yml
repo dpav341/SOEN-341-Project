@@ -26,12 +26,13 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - run: npm ci
-    - run: npm run build --if-present
-    - run: npm test
+    - run: cd front-end && npm ci
+    - run: cd front-end && npm run build --if-present
+    - run: cd front-end && npm test
 
     - name: Deploy with gh-pages
       run: |
+        cd front-end
         git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
         npm run deploy -- -u "github-actions-bot <support+actions@github.com>"
       env:
