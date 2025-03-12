@@ -4,6 +4,8 @@
 // learn more: https://github.com/testing-library/jest-dom
 import '@testing-library/jest-dom';
 import { TextEncoder, TextDecoder } from 'node:util'
+import dotenv from 'dotenv';
+dotenv.config();
 
 if (!global.TextEncoder) {
   global.TextEncoder = TextEncoder
