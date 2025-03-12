@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Navigate, Routes } from 'react-router-dom';
+import { Route, Navigate, Routes } from 'react-router';
 import { CookiesProvider, useCookies } from "react-cookie";
 import Login from './pages/Login/Login';
 import SignUp from './pages/SignUp/SignUp';

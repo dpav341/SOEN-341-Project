@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import { handleCookies } from "../../utils/helpers";
 import "./SignUp.css";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router";
 
 export default function SignUp() {
   const [name, setName] = useState("");
