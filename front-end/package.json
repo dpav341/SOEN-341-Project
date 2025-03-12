@@ -2,7 +2,7 @@
   "name": "react-front-end",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://github.io/SOEN-341-Project/",
+  "homepage": "https://dpav341.github.io/SOEN-341-Project/",
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.7.2",
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
