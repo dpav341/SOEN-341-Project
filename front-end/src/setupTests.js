@@ -12,3 +12,5 @@ if (!global.TextEncoder) {
 if (!global.TextDecoder) {
   global.TextDecoder = TextDecoder
 }
+
+Element.prototype.scrollIntoView = jest.fn();

@@ -8,6 +8,6 @@ test('renders learn react link', () => {
       <App />
     </MemoryRouter>
   );
-  const linkElement = screen.getByText(/learn react/i);
+  const linkElement = screen.getByText(/Chat Room/i);
   expect(linkElement).toBeInTheDocument();
 });
