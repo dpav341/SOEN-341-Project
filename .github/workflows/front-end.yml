@@ -54,7 +54,7 @@ jobs:
     - name: Set up environment variables
       run: echo "REACT_APP_FIREBASE_API_KEY= $REACT_APP_FIREBASE_API_KEY"
       env:
-        REACT_APP_FIREBASE_API_KEY: ${{ secrets.REACT_APP_FIREBASE_API_KEY }}      
+        REACT_APP_FIREBASE_API_KEY: ${{ vars.REACT_APP_FIREBASE_API_KEY }}      
 
     - name: Run Tests
       working-directory: front-end
