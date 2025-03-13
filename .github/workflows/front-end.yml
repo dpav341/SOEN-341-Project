@@ -36,14 +36,7 @@ jobs:
       working-directory: front-end
       run: npm ci
 
-    - name: Set up environment variables
-      id: envvar
-      run: echo "REACT_APP_FIREBASE_API_KEY=$secrets.outputs.REACT_APP_FIREBASE_API_KEY"
-      env:
-        TEST: test
 
-    - name: another one
-      run: echo "$steps.envvar.outputs.TEST"
 
     - name: Build
       working-directory: front-end
@@ -58,7 +51,11 @@ jobs:
         REACT_APP_FIREBASE_APP_ID: ${{ secrets.REACT_APP_FIREBASE_APP_ID }}
         REACT_APP_FIREBASE_MEASUREMENT_ID: ${{ secrets.REACT_APP_FIREBASE_MEASUREMENT_ID }}
 
-      
+    - name: Set up environment variables
+      run: echo "REACT_APP_FIREBASE_API_KEY= $REACT_APP_FIREBASE_API_KEY"
+      env:
+        REACT_APP_FIREBASE_API_KEY: ${{ secrets.REACT_APP_FIREBASE_API_KEY }}      
+
     - name: Run Tests
       working-directory: front-end
       run: npm test
