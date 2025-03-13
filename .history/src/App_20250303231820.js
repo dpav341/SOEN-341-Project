@@ -4,7 +4,6 @@ import { CookiesProvider, useCookies } from "react-cookie";
 import Login from './pages/Login/Login';
 import SignUp from './pages/SignUp/SignUp';
 import Select from './pages/Select/Select'
-import Channels from './pages/Channels/Channels';
 
 function App() {
   const [cookies] = useCookies();
@@ -18,7 +17,6 @@ function App() {
           <Route path="/select" element={<Select />} />
           <Route path="/login" element={<Login />} />
           <Route path="/sign-up" element={<SignUp />} />
-          <Route path="/channels" element={<Channels />} />
         </Routes>
       </CookiesProvider>
     </div>

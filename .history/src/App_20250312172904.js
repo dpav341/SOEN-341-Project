@@ -4,7 +4,6 @@ import { CookiesProvider, useCookies } from "react-cookie";
 import Login from './pages/Login/Login';
 import SignUp from './pages/SignUp/SignUp';
 import Select from './pages/Select/Select'
-import Channels from './pages/Channels/Channels';
 
 function App() {
   const [cookies] = useCookies();
