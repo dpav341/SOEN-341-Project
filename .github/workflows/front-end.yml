@@ -38,12 +38,12 @@ jobs:
 
     - name: Set up environment variables
       id: envvar
-      run: echo "REACT_APP_FIREBASE_API_KEY=${{ secrets.outputs.REACT_APP_FIREBASE_API_KEY }}"
+      run: echo "REACT_APP_FIREBASE_API_KEY=$secrets.outputs.REACT_APP_FIREBASE_API_KEY"
       env:
         TEST: test
 
     - name: another one
-      run: echo "${{ steps.envvar.outputs.TEST }}"
+      run: echo "$steps.envvar.outputs.TEST"
 
     - name: Build
       working-directory: front-end
