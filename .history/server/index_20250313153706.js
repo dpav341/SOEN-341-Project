@@ -46,6 +46,7 @@ app.get("/Channels/:roomName", async (req, res) => {
       text: msg.text,
       time: msg.time,
       channel: msg.channel,
+      admin: msg.admin
     }));
 
     console.log("Formatted Messages:", formattedMessages);

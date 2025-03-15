@@ -74,7 +74,7 @@
   width: 100%;
   cursor: pointer;
   border-radius: 4px;
-  /* transition: background 0.3s ease; */
+  transition: background 0.3s ease;
 }
 
 .channel-button.active {
@@ -84,20 +84,6 @@
 
 .delete-channel {
   border: none;
-}
-
-.delete-channel:hover {
-  border: none;
-  color: #1DB954;
-}
-
-.delete-message {
-  border: none;
-}
-
-.delete-message:hover {
-  border: none;
-  color: #1DB954;
 }
 
 .channel-button:hover {
@@ -175,25 +161,4 @@
 
 .send-button:hover {
   background-color: #36393f;
-}
-
-.channel-item {
-  display: flex;
-  justify-content: space-between;
-}
-
-.add-channel {
-  border: none;
-}
-
-
-.add-channel:hover {
-  border: none;
-  color: white;
-}
-
-.iddle {
-  border-radius: 25px;
-  border: solid 9px #36393f;
-
 }

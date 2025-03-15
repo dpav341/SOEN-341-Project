@@ -165,12 +165,12 @@ export default function Channels() {
               className={`channel-button ${selectedChannel === channel ? "active" : ""}`}
             >
               {channel}
-              {boss && (
-                <button className="delete-channel" onClick={() => handleDeleteChannel(channel)}>
-                  <FontAwesomeIcon icon={faTrash} />
-                </button>
-              )}
             </button>
+            {boss && (
+              <button className="delete-channel" onClick={() => handleDeleteChannel(channel)}>
+                <FontAwesomeIcon icon={faTrash} />
+              </button>
+            )}
           </div>
         ))}
 

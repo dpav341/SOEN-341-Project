@@ -74,7 +74,7 @@
   width: 100%;
   cursor: pointer;
   border-radius: 4px;
-  /* transition: background 0.3s ease; */
+  transition: background 0.3s ease;
 }
 
 .channel-button.active {
@@ -170,7 +170,7 @@
   color: white;
   border-radius: 4px;
   cursor: pointer;
-  transition: background 0.3s ease;
+  /* transition: background 0.3s ease; */
 }
 
 .send-button:hover {
@@ -180,20 +180,4 @@
 .channel-item {
   display: flex;
   justify-content: space-between;
-}
-
-.add-channel {
-  border: none;
-}
-
-
-.add-channel:hover {
-  border: none;
-  color: white;
-}
-
-.iddle {
-  border-radius: 25px;
-  border: solid 9px #36393f;
-
 }

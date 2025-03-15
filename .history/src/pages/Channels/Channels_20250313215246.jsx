@@ -1,20 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { create } from "zustand";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPersonSkiing, faMessage, faTrash, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faPersonSkiing, faMessage } from "@fortawesome/free-solid-svg-icons";
 import { io } from "socket.io-client";
 import axios from "axios";
 import "./Channels.css";
 
 const socket = io("http://localhost:3002");
 
-const userColors = {};
+const userColors = {}; // Store user-color mappings
+
 const getUserColor = (name) => {
   if (!userColors[name]) {
+    // Generate a random color if not assigned yet
     userColors[name] = `hsl(${Math.random() * 360}, 80%, 60%)`;
   }
   return userColors[name];
 };
+
 
 const useChatStore = create((set) => ({
   channels: ["General", "tremblant", "saintAnne"],
@@ -34,52 +37,41 @@ const useChatStore = create((set) => ({
       [channel]: [...(state.messages[channel] || []), message],
     },
   })),
-  deleteMessage: (channel, index) => set((state) => ({
-    messages: {
-      ...state.messages,
-      [channel]: state.messages[channel].filter((_, i) => i !== index),
-    },
-  })),
-  addChannel: (channelName) => set((state) => ({
-    channels: [...state.channels, channelName],
-    messages: { ...state.messages, [channelName]: [] },
-  })),
-  deleteChannel: (channelName) => set((state) => {
-    const updatedMessages = { ...state.messages };
-    delete updatedMessages[channelName];
-    return {
-      channels: state.channels.filter((channel) => channel !== channelName),
-      messages: updatedMessages,
-    };
-  }),
 }));
 
 export default function Channels() {
-  const { channels, messages, joinChannel, addMessages, addMessage, deleteMessage, addChannel, deleteChannel } = useChatStore();
+  const { channels, messages, joinChannel, addMessages, addMessage } = useChatStore();
   const [selectedChannel, setSelectedChannel] = useState(null);
   const [newMessage, setNewMessage] = useState("");
-  const [newChannel, setNewChannel] = useState("");
   const [username, setUsername] = useState("Baila");
-  const [boss, setBoss] = useState(true); // Admin flag
+  const [boss, setBoss] = useState(true);
 
   useEffect(() => {
     if (!selectedChannel) return;
 
-    axios.get(`http://localhost:3002/Channels/${selectedChannel}`)
+    // Fetch previous messages from the API
+    axios
+      .get(`http://localhost:3002/Channels/${selectedChannel}`)
       .then((response) => {
+        console.log("Fetched messages:", response.data);
+
+        // Ensure messages are formatted correctly
         useChatStore.setState((state) => ({
           messages: {
             ...state.messages,
             [selectedChannel]: response.data.map(msg => ({
-              sender: msg.name,
-              content: msg.text,
+              sender: msg.name,  // ✅ Ensure correct key
+              content: msg.text,  // ✅ Ensure correct key
             })),
           },
         }));
       })
       .catch((error) => console.error("Error loading messages:", error));
 
+    // Join the socket channel
     socket.emit("join room", selectedChannel, (prevMessages) => {
+      console.log("Socket previous messages:", prevMessages);
+
       useChatStore.setState((state) => ({
         messages: {
           ...state.messages,
@@ -91,28 +83,39 @@ export default function Channels() {
       }));
     });
 
+    // Listen for new messages
     const messageListener = (message) => {
+      console.log("New message received:", message);
+
       if (message.channel === selectedChannel) {
         useChatStore.setState((state) => {
           const existingMessages = state.messages[selectedChannel] || [];
+
+          // Prevent duplicate messages
           if (!existingMessages.some(msg => msg.content === message.text && msg.sender === message.name)) {
             return {
               messages: {
                 ...state.messages,
-                [selectedChannel]: [...existingMessages, { sender: message.name, content: message.text }],
+                [selectedChannel]: [
+                  ...existingMessages,
+                  { sender: message.name, content: message.text },
+                ],
               },
             };
           }
-          return state;
+          return state; // No changes if duplicate
         });
       }
     };
 
+
     socket.on("new message", messageListener);
+
     return () => {
       socket.off("new message", messageListener);
     };
   }, [selectedChannel]);
+
 
   const handleSendMessage = () => {
     if (selectedChannel && newMessage.trim()) {
@@ -123,92 +126,47 @@ export default function Channels() {
         time: new Date(),
       };
 
+      // Emit message but don't add it to store immediately
       socket.emit("newMessage", messageData);
       setNewMessage("");
     }
   };
 
-  const handleDeleteMessage = (index) => {
-    if (boss || messages[selectedChannel][index].sender === username) {
-      deleteMessage(selectedChannel, index);
-      socket.emit("deleteMessage", { channel: selectedChannel, index });
-    }
-  };
-
-  const handleAddChannel = () => {
-    if (boss && newChannel.trim() && !channels.includes(newChannel)) {
-      addChannel(newChannel);
-      setNewChannel("");
-    }
-  };
-
-  const handleDeleteChannel = (channel) => {
-    if (boss) {
-      deleteChannel(channel);
-      socket.emit("deleteChannel", { channel });
-      if (selectedChannel === channel) setSelectedChannel(null);
-    }
-  };
 
   return (
     <div className="chat-app">
       <div className="sidebar">
         <h1>SkiGo</h1>
-
         {channels.map((channel) => (
-          <div key={channel} className="channel-item">
-            <button
-              onClick={() => {
-                setSelectedChannel(channel);
-                joinChannel(channel);
-              }}
-              className={`channel-button ${selectedChannel === channel ? "active" : ""}`}
-            >
-              {channel}
-              {boss && (
-                <button className="delete-channel" onClick={() => handleDeleteChannel(channel)}>
-                  <FontAwesomeIcon icon={faTrash} />
-                </button>
-              )}
-            </button>
-          </div>
+          <button
+            key={channel}
+            onClick={() => {
+              setSelectedChannel(channel);
+              joinChannel(channel);
+            }}
+            className={`channel-button ${selectedChannel === channel ? "active" : ""}`}
+          >
+            {channel}
+          </button>
         ))}
-
-        {boss && (
-          <div className="channel-management">
-            <input
-              value={newChannel}
-              onChange={(e) => setNewChannel(e.target.value)}
-              placeholder="New channel name"
-              className="channel-input"
-            />
-            <button onClick={handleAddChannel} className="add-channel">
-              <FontAwesomeIcon icon={faPlus} />
-            </button>
-          </div>
-        )}
-
-        <button className="messLink">
+        <button className='messLink'>
           <FontAwesomeIcon className="chgMess" icon={faMessage} />
         </button>
       </div>
-
       <div className="chat-container">
         {selectedChannel ? (
           <>
             <div className="chat-header">{selectedChannel}</div>
             <div className="chat-messages">
               {messages[selectedChannel]?.map((msg, idx) => (
-                <div key={idx} className={`message ${msg.sender === username ? "my-message" : "other-message"}`}>
+                <div
+                  key={idx}
+                  className={`message ${msg.sender === username ? "my-message" : "other-message"}`}
+                >
                   <span className="username" style={{ color: getUserColor(msg.sender) }}>
                     {msg.sender}
                   </span>
                   <p className="message-text">{msg.content}</p>
-                  {(boss || msg.sender === username) && (
-                    <button className="delete-message" onClick={() => handleDeleteMessage(idx)}>
-                      <FontAwesomeIcon icon={faTrash} />
-                    </button>
-                  )}
                 </div>
               ))}
             </div>
