@@ -1,6 +1,7 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import io from 'socket.io-client';
-import './ChatApp.css'; // Import your CSS for styling
+import './ChatApp.css';
 
 const socket = io('ws://localhost:3500');
 
