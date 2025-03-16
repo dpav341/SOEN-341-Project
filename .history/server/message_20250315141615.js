@@ -22,7 +22,7 @@ export async function saveMessage(room, name, text) {
     else {
         const collection = getChannelCollection(room);
         await collection.insertOne({
-            name,
+         name,
             text,
             time: new Date(),
         });
