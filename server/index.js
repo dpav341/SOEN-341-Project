@@ -2,7 +2,7 @@ import express from 'express'
 import { Server } from "socket.io"
 import path from 'path'
 import { fileURLToPath } from 'url'
-import { getChannelCollection, getDMCollection, saveMessage } from './message.js'
+import { getChannelCollection, getDMCollection, saveMessage, Conversation } from './message.js'
 import { config } from 'dotenv'
 config({ path: '../.env' })
 import { Connection } from './db.js'
