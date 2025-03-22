@@ -10,7 +10,7 @@ import { Connection } from './db.js'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-const PORT = process.env.PORT || 3500
+const PORT = process.env.PORT || 3002
 const ADMIN = "Admin"
 
 const app = express()
@@ -33,7 +33,7 @@ const UsersState = {
 
 const io = new Server(expressServer, {
     cors: {
-        origin: process.env.NODE_ENV === "production" ? false : ["http://localhost:5500", "http://127.0.0.1:5500"]
+        origin: process.env.NODE_ENV === "production" ? false : ["http://localhost:5500", "http://127.0.0.1:5500", "http://localhost:3000"]
     }
 })
 
