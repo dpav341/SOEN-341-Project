@@ -2,8 +2,10 @@ import express from 'express'
 import { Server } from "socket.io"
 import path from 'path'
 import { fileURLToPath } from 'url'
-import { Connection } from './db.js'
 import {getChannelCollection, getDMCollection, saveMessage} from './message.js'
+import { config } from 'dotenv'
+config({ path: '../.env'})
+import { Connection } from './db.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
