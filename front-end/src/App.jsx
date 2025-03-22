@@ -5,6 +5,7 @@ import Login from './pages/Login/Login';
 import SignUp from './pages/SignUp/SignUp';
 import Select from './pages/Select/Select'
 import ChatContainer from "./components/ChatContainer"
+import ChatPage from './pages/ChatPage/ChatPage';
 
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
         <Route path="/select" element={<Select />} />
         <Route path="/login" element={<Login />} />
         <Route path="/sign-up" element={<SignUp />} />
+        <Route path="/chat" element={<ChatPage />} />
       </Routes>
     </CookiesProvider>
   </div>
