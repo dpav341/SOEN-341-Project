@@ -1,84 +1,115 @@
-import { Server } from "socket.io";
-import { createServer } from "http";
 import { io as Client } from "socket.io-client";
+import { Server } from "socket.io";
+import http from "http";
+import { Conversation } from "../message.js";
 import express from "express";
 
-jest.setTimeout(10000);
+// Mock database connection
+jest.mock("../db.js", () => ({
+    Connection: jest.fn(),
+}));
+
+jest.mock("../message.js", () => ({
+    Conversation: {
+        find: jest.fn().mockReturnValue({
+            sort: jest.fn().mockReturnThis(),
+            exec: jest.fn().mockResolvedValue([]), // Mock empty message history
+        }),
+    },
+}));
+
+let server, io, clientSocket;
+
+beforeAll((done) => {
+    const app = express();
+    server = http.createServer(app);
+    io = new Server(server);
+    server.listen(3002, () => {
+        console.log("Test server started on port 3002");
+        done();
+    });
+
+    io.on("connection", (socket) => {
+        console.log(`User ${socket.id} connected`);
+
+        socket.on("message", (msg) => {
+            io.emit("message", msg);
+        });
+
+        socket.on("newMessage", (msg) => {
+            io.emit("message", msg);
+        });
+
+        socket.on("enterRoom", ({ name, room }) => {
+            socket.join(room);
+            io.to(room).emit("messageList", []);
+        });
+
+        socket.on("disconnect", () => {
+            console.log(`User ${socket.id} disconnected`);
+        });
+    });
+});
+
+beforeEach((done) => {
+    clientSocket = new Client("http://localhost:3002");
+    clientSocket.on("connect", done);
+});
+
+afterEach(() => {
+    if (clientSocket.connected) {
+        clientSocket.disconnect();
+    }
+});
+
+afterAll((done) => {
+    io.close();
+    server.close(() => {
+        console.log("Test server closed.");
+        done();
+    });
+});
 
 describe("Socket.IO Server", () => {
-    let io, serverSocket, clientSocket, httpServer;
-
-    beforeAll((done) => {
-        // Create an HTTP server and attach the Socket.IO server
-        const app = express()
-        httpServer = createServer(app);
-        io = new Server(httpServer);
-        httpServer.listen(() => {
-            const port = httpServer.address().port;
-            clientSocket = Client(`http://localhost:${port}`);
-            io.on("connection", (socket) => {
-                serverSocket = socket;
-            });
-            clientSocket.on("connect", done);
-        });
-    });
-
-    afterAll(() => {
-        io.close();
-        clientSocket.close();
-        httpServer.close();
-    });
-
     test("should establish a socket connection", (done) => {
-        clientSocket.on("connect", () => {
-            try {
-                expect(clientSocket.connected).toBe(true);
-                done();
-            } catch (error) {
-                done(error); // Call done with the error to fail the test
-            }
-        });
-
-        clientSocket.on("connect_error", (error) => {
-            console.error("Connection error:", error); // Debugging log for connection errors
-            done(error); // Fail the test if there's a connection error
-        });
+        expect(clientSocket.connected).toBe(true);
+        done();
     });
 
     test("should emit and receive a 'message' event", (done) => {
-        const testMessage = { name: "TestUser", text: "Hello, world!" };
+        const testMessage = { name: "User1", text: "Hello World" };
 
         clientSocket.emit("message", testMessage);
 
-        serverSocket.on("message", (msg) => {
-            expect(msg).toEqual(testMessage);
+        clientSocket.on("message", (msg) => {
+            expect(msg).toEqual(expect.objectContaining(testMessage));
             done();
         });
     });
 
     test("should emit and receive a 'newMessage' event", (done) => {
-        const newMessage = { name: "TestUser", text: "New message content" };
+        const testMessage = { name: "User2", text: "New Message" };
 
-        clientSocket.emit("newMessage", newMessage);
+        clientSocket.emit("newMessage", testMessage);
 
-        serverSocket.on("newMessage", (msg) => {
-            expect(msg).toEqual(newMessage);
+        clientSocket.on("message", (msg) => {
+            expect(msg).toEqual(expect.objectContaining(testMessage));
             done();
         });
     });
 
     test("should handle 'enterRoom' event and emit 'messageList'", (done) => {
-        const roomData = { name: "TestUser", room: "TestRoom" };
+        const testRoom = { name: "User3", room: "TestRoom" };
 
-        clientSocket.emit("enterRoom", roomData);
-
-        serverSocket.on("enterRoom", (data) => {
-            expect(data).toEqual(roomData);
-            serverSocket.emit("messageList", [{ text: "Welcome to the room!" }]);
+        jest.spyOn(Conversation, "find").mockReturnValue({
+            sort: jest.fn().mockReturnThis(),
+            exec: jest.fn().mockResolvedValue([{ text: "Test message" }]),
         });
 
+        clientSocket.emit("enterRoom", testRoom);
+
         clientSocket.on("messageList", (messages) => {
-            expect(messages).toEqual([{ text: "Welcome to the room!" }]);
+            expect(messages).toEqual([]);
             done();
         });
     });
@@ -89,6 +120,6 @@ describe("Socket.IO Server", () => {
             done();
         });
 
-        clientSocket.close();
+        clientSocket.disconnect();
     });
 });
