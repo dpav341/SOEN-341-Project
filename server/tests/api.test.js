@@ -58,4 +58,19 @@ describe("Socket.IO Server", () => {
 
         clientSocket.disconnect();
     });
+
+    test("should send the list of users inside a room", (done) => {
+        const testRoom = { name: "User1", room: "TestRoom" };
+
+        clientSocket.emit("enterRoom", testRoom);
+
+        clientSocket.on("userList", (data) => {
+            expect(data).toEqual({
+                users: expect.arrayContaining([
+                    expect.objectContaining({ name: "User1", room: "TestRoom" }),
+                ]),
+            });
+            done();
+        });
+    });
 });
