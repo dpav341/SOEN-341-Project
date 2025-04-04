@@ -6,8 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "node .",
-    "dev": "nodemon .",
-    "build": "npm install && npm install --prefix front-end && npm run build --prefix front-end" 
+    "dev": "nodemon ."
   },
   "keywords": [],
   "author": "",
