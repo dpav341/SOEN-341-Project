@@ -2,7 +2,7 @@
 
 ## Description
 
-A versatile communication platform for seamless interaction through text channels and direct messaging, _SkiGo_ allows skiers and snowboarders to connect in a virtual community or chatting privately. The platform offers an intuitive and organized space to plan carpooling to ski and snowboarding destinations, often outside the reach of public transit. Users can create topic-specific channels, share media, and engage in one-on-one conversations, all while enjoying customizable features that enhance the experience. With a clean interface and robust privacy options, the platform is the perfect hub for efficient communication.
+A versatile communication platform for seamless interaction through text channels and direct messaging, _SkiGo_ allows skiers and snowboarders to connect in a virtual community or chatting privately. The platform offers an intuitive and organized space to plan carpooling to ski and snowboarding destinations, often outside the reach of public transit. With a clean interface and robust privacy options, the platform is the perfect hub for efficient communication.
 
 ## Objective
 
