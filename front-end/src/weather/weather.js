@@ -30,7 +30,7 @@ function Weather() {
                 }
             })
             .catch(error => {
-                console.error('Error fetching current weather data:', error);
+                console.error('Error fetching weather data:', error);
                 setError('Error fetching current weather data. Please try again.');
             });
 
