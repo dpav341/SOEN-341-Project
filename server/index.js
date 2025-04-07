@@ -9,12 +9,12 @@ import { Connection } from './db.js'
 const PORT = process.env.PORT || 3002
 const ADMIN = "Admin"
 
+const app = express()
+
 app.use(express.static(path.join(__dirname, 'front-end/build')));
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'front-end/build', 'index.html'));
 });
-
-const app = express()
 
 const expressServer = app.listen(PORT, () => {
     console.log(`listening on port ${PORT}`)
