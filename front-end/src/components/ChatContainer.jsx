@@ -6,8 +6,6 @@ import socketIOClient from "socket.io-client";
  const ChatContainer = () => {
   const socketio = socketIOClient(
   process.env.NODE_ENV === 'production'
-    ? undefined  // use same origin as frontend
-    : "http://localhost:3002"
 );
 
    const [chats, setChats] = useState([]);
