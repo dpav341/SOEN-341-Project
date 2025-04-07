@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import '../Components/InputText.scss';  // Assuming styles are defined in this file
+import '../Components/InputText.scss'; 
 import '../Components/button.scss';
  
  const InputText = ({ addMessage }) => {
