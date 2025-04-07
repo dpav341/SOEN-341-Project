@@ -15,9 +15,9 @@ const ADMIN = "Admin"
 
 const app = express()
 
-app.use(express.static(path.join(__dirname, 'front-end/build')));
+app.use(express.static(path.join(__dirname, '../front-end/build')));
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'front-end/build', 'index.html'));
+  res.sendFile(path.join(__dirname, '../front-end/build/index.html'));
 });
 
 const expressServer = app.listen(PORT, () => {
