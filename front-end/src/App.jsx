@@ -4,7 +4,7 @@ import { CookiesProvider, useCookies } from "react-cookie";
 import Login from './pages/Login/Login';
 import SignUp from './pages/SignUp/SignUp';
 import Select from './pages/Select/Select';
-import ChatContainer from "./Components/ChatContainer";
+import ChatContainer from "./components/ChatContainer";
 import ChatPage from './pages/ChatPage/ChatPage';
 import Weather from './weather/weather';
 
