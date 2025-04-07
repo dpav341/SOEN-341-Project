@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "build": "npm install --prefix server && npm install --prefix front-end && npm run build --prefix front-end" 
+    "build": "npm install --prefix server && npm install --prefix front-end && npm run build --prefix front-end",
+    "start": "node . --prefix server"
   },
   "dependencies": {
     "dotenv": "^16.4.7"
