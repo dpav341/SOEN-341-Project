@@ -4,6 +4,7 @@ import { CookiesProvider, useCookies } from "react-cookie";
 import Login from './pages/Login/Login';
 import SignUp from './pages/SignUp/SignUp';
 import Select from './pages/Select/Select';
+import ChatContainer from "./Components/ChatContainer";
 import ChatPage from './pages/ChatPage/ChatPage';
 import Weather from './weather/weather';
 
@@ -15,6 +16,7 @@ function App() {
     <CookiesProvider>
       {/* <Navbar /> */}
       <Routes>
+        <Route exact path="/" element={<ChatContainer />} />
         <Route path="/select" element={<Select />} />
         <Route path="/login" element={<Login />} />
         <Route path="/sign-up" element={<SignUp />} />
