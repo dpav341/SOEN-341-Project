@@ -6,6 +6,10 @@ import { config } from 'dotenv'
 config({ path: '../.env' })
 import { Connection } from './db.js'
 
+import { fileURLToPath } from 'url'
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+
 const PORT = process.env.PORT || 3002
 const ADMIN = "Admin"
 
