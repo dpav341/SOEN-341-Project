@@ -1,4 +1,5 @@
 import express from 'express'
+import path from 'path'
 import { Server } from "socket.io"
 import { getChannelCollection, getDMCollection, saveMessage, Conversation } from './message.js'
 import { config } from 'dotenv'
@@ -7,6 +8,11 @@ import { Connection } from './db.js'
 
 const PORT = process.env.PORT || 3002
 const ADMIN = "Admin"
+
+app.use(express.static(path.join(__dirname, 'front-end/build')));
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'front-end/build', 'index.html'));
+});
 
 const app = express()
 
