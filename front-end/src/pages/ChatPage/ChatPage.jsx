@@ -4,7 +4,7 @@ import { io as socketIOClient } from "socket.io-client";
 import './ChatPage.css';
 
 //const socket = io('ws://localhost:3002');
-const socketio = socketIOClient(
+const socket = socketIOClient(
   process.env.NODE_ENV === 'production'
     ? undefined  // use same origin as frontend
     : "http://localhost:3002"
