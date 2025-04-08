@@ -1,8 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
-import io from 'socket.io-client';
+//import io from 'socket.io-client';
+import { io as socketIOClient } from "socket.io-client";
 import './ChatPage.css';
 
-const socket = io('ws://localhost:3002');
+//const socket = io('ws://localhost:3002');
+const socketio = socketIOClient(
+  process.env.NODE_ENV === 'production'
+    ? undefined  // use same origin as frontend
+    : "http://localhost:3002"
+);
 
 function Message({ name, text, time, isUser }) {
   return (
