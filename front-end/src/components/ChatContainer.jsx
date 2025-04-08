@@ -1,12 +1,18 @@
 import React, { useEffect, useState } from "react";
 import ChatLists from "./ChatLists";
 import InputText from "./InputText";
-import socketIOClient from "socket.io-client";
+//import socketIOClient from "socket.io-client";
+import { io as socketIOClient } from "socket.io-client"; 
  
  const ChatContainer = () => {
+
+  //const socketio = socketIOClient("http://localhost:3002");
   const socketio = socketIOClient(
   process.env.NODE_ENV === 'production'
+    ? undefined  // use same origin as frontend
+    : "http://localhost:3002"
 );
+
 
    const [chats, setChats] = useState([]);
  
